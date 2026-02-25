@@ -72,7 +72,29 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "/blog/";
               },
-            },{id: "post-a-post-with-plotly-js",
+            },{id: "post-a-post-with-table-of-contents-on-a-sidebar",
+        
+          title: "a post with table of contents on a sidebar",
+        
+        description: "create FS for a new lambda region",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/create-new-lambda-FS/";
+          
+        },
+      },{id: "post-a-post-with-table-of-contents-on-a-sidebar",
+        
+          title: "a post with table of contents on a sidebar",
+        
+        description: "common linux commands when doing oss development",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/common-linux-commands-for-oss/";
+          
+        },
+      },{id: "post-a-post-with-plotly-js",
         
           title: "a post with plotly.js",
         
