@@ -83,3 +83,43 @@ cd /lambda/nfs/dev-env/repos && git init test-signing && cd test-signing
 git commit --allow-empty -m 'test signed commit'
 git log --show-signature
 ```
+
+### setup vllm
+
+sync repo
+
+```
+cd /lambda/nfs/dev-env/repos/vllm
+git fetch upstream main
+git pull upstream main
+git push
+```
+
+### uv pip sync envs
+
+```
+uv venv --python 3.12 --seed
+source .venv/bin/activate
+
+#incremental compilation using ccache
+CCACHE_NOHASHDIR="true" VLLM_USE_PRECOMPILED=1 uv pip install -U -e . --torch-backend=auto
+
+which nvcc
+
+uv pip install -r requirements/build.txt --torch-backend=auto
+
+uv pip install pytest tblib
+```
+
+if we want to setup the incremental compilation workflow
+
+```
+python tools/generate_cmake_presets.py
+
+cmake --preset release
+
+cmake --build --preset release --target install
+
+# Make changes and repeat
+cmake --build --preset release --target install
+```
