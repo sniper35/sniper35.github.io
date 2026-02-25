@@ -1,6 +1,6 @@
 ---
 layout: post
-title: a post with table of contents on a sidebar
+title: Common linux commands when doing oss development
 date: 2026-02-07 10:14:00-0400
 description: common linux commands when doing oss development
 tags: infra tools oss

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: a post with table of contents on a sidebar
+title: Create FS for a new region in Lambda Cloud
 date: 2026-02-07 10:14:00-0400
 description: create FS for a new lambda region
 tags: infra tools oss cloud GPU
@@ -88,7 +88,9 @@ ssh -T git@github.com
 
 ```
 cd /lambda/nfs/dev-env/repos && git init test-signing && cd test-signing
+
 git commit --allow-empty -m 'test signed commit'
+
 git log --show-signature
 ```
 
@@ -98,15 +100,20 @@ sync repo
 
 ```
 cd /lambda/nfs/dev-env/repos/vllm
+
 git fetch upstream main
+
 git pull upstream main
+
 git push
 ```
 
 ### uv pip sync envs
 
 ```
+
 uv venv --python 3.12 --seed
+
 source .venv/bin/activate
 
 #incremental compilation using ccache
@@ -117,6 +124,7 @@ which nvcc
 uv pip install -r requirements/build.txt --torch-backend=auto
 
 uv pip install pytest tblib
+
 ```
 
 if we want to setup the incremental compilation workflow
@@ -130,4 +138,5 @@ cmake --build --preset release --target install
 
 # Make changes and repeat
 cmake --build --preset release --target install
+
 ```
