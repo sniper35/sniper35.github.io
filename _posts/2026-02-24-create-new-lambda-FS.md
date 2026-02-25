@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Create FS for a new region in Lambda Cloud
-date: 2026-02-07 10:14:00-0400
+date: 2026-02-24 10:14:00-0400
 description: create FS for a new lambda region
 tags: infra tools oss cloud GPU
 categories: ai-infra
