@@ -13,6 +13,14 @@ toc:
 
 This post shows the workflow to setup a new FS for a new region so we can reuse this FS when creating new instance in this region.
 
+### Run once you setup a new server and re-use the FS
+
+```
+bash /lambda/nfs/dev-env/setup/bootstrap.sh && source ~/.bashrc
+```
+
+## Set up a fS step by step
+
 ### edit env.config
 
 edit env.config to ajust `LAMBDA_REGION=`
