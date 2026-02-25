@@ -78,7 +78,7 @@ python3  4217  dong    5u  IPv4 0xabc        0t0  TCP *:8000 (LISTEN)
 
 ### Workflow of debugging a process
 
-# 1. find PID
+1. find PID
 
 by port:
 
@@ -96,28 +96,39 @@ pgrep -af command
 - -f — “full command line match”
   To find the PID for the running process `java -Xmx2g -jar fis-transaction-adapter.jar`, singly use `pgrep fis-transaction-adapter` will not match but `pgrep -f fis-transaction-adapter` will match and find the PID.
 
-# 2. inspect
+2. inspect
 
 ps -o pid,stat,%cpu,%mem,etime,command -p <PID>
 lsof -p <PID>
 
-# 3. terminate
+3. terminate
 
+```
 kill -TERM <PID>
 sleep 5
 kill -9 <PID> # only if needed
 
 ```
 
+### UV env:
+
+```
+uv venv --python 3.12 --seed
+source .venv/bin/activate
+```
+
 ### Git commands
 
 To show only the filenames (added or deleted) we could use
+
 ```
 
 git show --name-status a535897b3c7
 
 ```
+
 The output will look like:
+
 ```
 
 commit a535897b3c744974152eedf9cdfd48c3c85dcc2a
@@ -133,13 +144,17 @@ A examples/diffusion_router/run_router_vs_no_router_matrix.py
 (END)
 
 ```
+
 Add ` --oneline` option,
+
 ```
 
 git show --oneline --name-status a535897b3c7
 
 ```
+
 The output will look like:
+
 ```
 
 a535897b test scripts
@@ -164,4 +179,7 @@ Jean shorts raw denim Vice normcore, art party High Life PBR skateboard stumptow
 ### Example of another Sub-Heading 2
 
 Jean shorts raw denim Vice normcore, art party High Life PBR skateboard stumptown vinyl kitsch. Four loko meh 8-bit, tousled banh mi tilde forage Schlitz dreamcatcher twee 3 wolf moon. Chambray asymmetrical paleo salvia, sartorial umami four loko master cleanse drinking vinegar brunch. <a href="https://www.pinterest.com">Pinterest</a> DIY authentic Schlitz, hoodie Intelligentsia butcher trust fund brunch shabby chic Kickstarter forage flexitarian. Direct trade <a href="https://en.wikipedia.org/wiki/Cold-pressed_juice">cold-pressed</a> meggings stumptown plaid, pop-up taxidermy. Hoodie XOXO fingerstache scenester Echo Park. Plaid ugh Wes Anderson, freegan pug selvage fanny pack leggings pickled food truck DIY irony Banksy.
+
+```
+
 ```
