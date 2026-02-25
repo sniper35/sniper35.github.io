@@ -72,9 +72,9 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "/blog/";
               },
-            },{id: "post-a-post-with-table-of-contents-on-a-sidebar",
+            },{id: "post-create-fs-for-a-new-region-in-lambda-cloud",
         
-          title: "a post with table of contents on a sidebar",
+          title: "Create FS for a new region in Lambda Cloud",
         
         description: "create FS for a new lambda region",
         section: "Posts",
@@ -83,9 +83,9 @@ ninja.data = [{
             window.location.href = "/blog/2026/create-new-lambda-FS/";
           
         },
-      },{id: "post-a-post-with-table-of-contents-on-a-sidebar",
+      },{id: "post-common-linux-commands-when-doing-oss-development",
         
-          title: "a post with table of contents on a sidebar",
+          title: "Common linux commands when doing oss development",
         
         description: "common linux commands when doing oss development",
         section: "Posts",
