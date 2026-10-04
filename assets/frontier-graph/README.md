@@ -37,10 +37,10 @@ not generated.
 
 ## URL parameters
 
-| Param         | Effect                                                                                                                              |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `?embed=1`    | Hides the header title and the footer stats; the canvas fills the frame. Use for iframes.                                           |
-| `?data=<url>` | Load graph data from `<url>` instead of `data/graph.js`. A `.json` URL is fetched; a `.js` URL must define `window.FRONTIER_GRAPH`. |
+| Param         | Effect                                                                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `?embed=1`    | Hides the header title and the footer stats; the canvas fills the frame. Use for iframes.                                                              |
+| `?data=<url>` | Load graph data from `<url>` (same origin only) instead of `data/graph.js`. A `.json` URL is fetched; a `.js` URL must define `window.FRONTIER_GRAPH`. |
 
 ## URL hash state
 
@@ -61,7 +61,18 @@ Drag a node to pin-and-reheat; scroll or pinch to zoom.
 
 ## Integration
 
-**github.io (al-folio / Jekyll)**: copy this folder to `assets/frontier-graph/`, add
+**github.io (al-folio / Jekyll)**: copy this folder to `assets/frontier-graph/`. al-folio runs
+`jekyll-terser` over every `.js` file that does not end in `.min.js` and ignores exclude
+settings, so rename the scripts in the copy and patch the references:
+
+```sh
+cd assets/frontier-graph
+mv app.js app.min.js; mv data/graph.js data/graph.min.js; mv data/graph.sample.js data/graph.sample.min.js
+sed -i '' -e 's#data/graph\.js#data/graph.min.js#g' -e 's#data/graph\.sample\.js#data/graph.sample.min.js#g' -e 's#"app\.js"#"app.min.js"#g' index.html app.min.js
+```
+
+Also add `assets/frontier-graph/*` and `assets/frontier-graph/data/*` to `jekyll-minifier.exclude`
+in `_config.yml` so the HTML is served untouched. Then add
 `_pages/frontier-graph.md` with a full-width iframe to
 `/assets/frontier-graph/index.html?embed=1`, and add a nav entry. For example:
 
