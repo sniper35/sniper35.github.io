@@ -664,6 +664,159 @@ body.filters-collapsed #filters {
   padding: 0 6px;
 }
 
+/* career rings, career drawer section, filter rail */
+.node .ring {
+  fill: none;
+  stroke-width: 2px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+.no-rings .node .rings {
+  display: none;
+}
+#filters .lbl {
+  display: block;
+  margin: 8px 0 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.career {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 4px !important;
+  border-left: 2px solid var(--border);
+  margin-left: 4px !important;
+}
+.stint {
+  position: relative;
+  padding: 4px 0 8px 12px;
+}
+.stint::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 11px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--panel);
+  border: 2px solid var(--border);
+}
+.stint.cur::before {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.srow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+.raw {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+.sdates {
+  color: var(--muted);
+  font-size: 11.5px;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.role {
+  color: #c4cce0;
+}
+.now {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+.conf {
+  margin-left: auto;
+  border-radius: 999px;
+  padding: 0 7px;
+  font-size: 10.5px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.conf-high {
+  color: #7fd6a4;
+  border-color: #7fd6a455;
+}
+.conf-medium {
+  color: #e8c06a;
+  border-color: #e8c06a55;
+}
+.conf-low {
+  color: #e58a8a;
+  border-color: #e58a8a55;
+}
+.plain li .conf {
+  margin-left: 0;
+}
+
+/* flows (chord) view: replaces the force graph; the simulation is left untouched underneath */
+#flows-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+body.view-flows #svg {
+  display: none;
+}
+body.view-flows #flows-svg {
+  display: block;
+}
+body.view-flows .g-only,
+body:not(.view-flows) .f-only {
+  display: none;
+}
+#flows-svg .root {
+  transition: transform 0.22s ease;
+}
+#flows-svg .ribbon {
+  opacity: 0.55;
+  stroke: var(--bg);
+  stroke-width: 0.5px;
+  cursor: pointer;
+  transition: opacity 0.12s;
+}
+#flows-svg .ribbon.hov {
+  opacity: 0.9;
+}
+#flows-svg .ribbon.sel {
+  opacity: 0.95;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+#flows-svg .ribbon.dim {
+  opacity: 0.08;
+}
+#flows-svg .garc {
+  cursor: pointer;
+  stroke: var(--bg);
+  stroke-width: 1px;
+  transition: opacity 0.12s;
+}
+#flows-svg .garc:hover,
+#flows-svg .garc.sel {
+  stroke: #fff;
+}
+#flows-svg .garc.dim {
+  opacity: 0.3;
+}
+#flows-svg .glabel {
+  fill: var(--text);
+  font-size: 12px;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+#flows-svg .glabel.dim {
+  opacity: 0.35;
+}
+
 /* embed */
 .embed .brand,
 .embed #stats {
@@ -743,7 +896,9 @@ body.filters-collapsed #filters {
 }
 @media (prefers-reduced-motion: reduce) {
   #drawer,
-  #filters {
+  #filters,
+  #flows-svg .root,
+  #flows-svg .ribbon {
     transition: none;
   }
 }
