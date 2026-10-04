@@ -94,7 +94,7 @@ settings, so rename the scripts in the copy and patch the references:
 ```sh
 cd assets/frontier-graph
 mv app.js app.min.js; mv flows.js flows.min.js; mv data/graph.js data/graph.min.js; mv data/graph.sample.js data/graph.sample.min.js
-sed -i '' -e 's#data/graph\.js#data/graph.min.js#g' -e 's#data/graph\.sample\.js#data/graph.sample.min.js#g' -e 's#"app\.js"#"app.min.js"#g' -e 's#"flows\.js"#"flows.min.js"#g' index.html app.min.js
+sed -i '' -e "s#data/graph\.js\(['\"]\)#data/graph.min.js\1#g" -e "s#data/graph\.sample\.js\(['\"]\)#data/graph.sample.min.js\1#g" -e 's#"app\.js"#"app.min.js"#g' -e 's#"flows\.js"#"flows.min.js"#g' index.html app.min.js flows.min.js
 ```
 
 Also add `assets/frontier-graph/*` and `assets/frontier-graph/data/*` to `jekyll-minifier.exclude`
