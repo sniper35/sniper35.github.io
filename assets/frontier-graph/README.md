@@ -47,8 +47,9 @@ not generated.
 The hash is written on every change and read on load (and on `hashchange`), so a link
 reproduces the view. Keys: `p=<person id>`, `labs=a,b` (highlighted labs), `solo=1` (with a
 single lab in `labs`: show only that lab), `kinds=coauthor,topical`, `years=2019-2024`,
-`view=bridges` or `view=connectors`, `w=<min shared works>`, `mech=<tag>`, `iso=1` (hide
-people with no visible edges). Example:
+`view=bridges`, `view=connectors` or `view=flows`, `w=<min shared works>`, `mech=<tag>`, `iso=1`
+(hide people with no visible edges), `from=<org id>` / `to=<org id>` (Career filters),
+`rings=0` (career rings off), `undated=0` (Flows view: exclude undated moves). Example:
 `index.html?embed=1#p=anthropic:neilhoulsby&years=2020-2026`
 
 ## Controls
@@ -59,6 +60,31 @@ shift-click shows only that lab, clicking the sole active chip resets. `/` focus
 `Esc` clears, left/right arrows walk the collaborator list while the drawer is open.
 Drag a node to pin-and-reheat; scroll or pinch to zoom.
 
+## Employment history views
+
+Everything below is driven by optional fields (`orgs`, `people[].history`, `flows`, `meta.employment`;
+see `docs/employment-history-contract.md` §5-§6). With none of them in the data the app renders exactly as
+before, the Career block is hidden and the Flows view shows "No employment history in this dataset".
+
+- **Flows** (header button, `#view=flows`; code in `flows.js`): replaces the force graph with a directed
+  chord diagram of moves between orgs. Groups are the lab orgs plus the largest external orgs by total flow
+  count, 8 groups at most; the rest are merged into "Other". Ribbons are coloured by the org moved from; hover
+  shows `A → B · N people (years)`. Click a ribbon for the people who made that move (lab dot, year or
+  "undated", confidence); click an arc for "Moved in" / "Moved out". Clicking a person returns to the graph
+  with them selected. The Years slider filters by the year of the new role; "Include undated moves"
+  (default on) controls undated flows. The edge-kind, min-works, mechanism and career filters are hidden here;
+  lab chips emphasise ribbons touching that lab. Footer: `Moves N · People M · Undated K`. Leaving the view
+  (Reset or another preset) shows the existing force graph again; the simulation is not re-run.
+- **Career rings** (filter rail, default on, `rings=0` to hide): thin outer arcs around a node, one per prior
+  org in that org's colour, oldest first clockwise from 12 o'clock, at most 4 (oldest dropped). The current
+  org is never drawn. They dim together with the node.
+- **Career section** in the person drawer (above Collaborators): stints in order with org chip, raw text if it
+  differs from the label, dates (`2022 – 2025-07`, `since 2025-07`, `undated`), role, a confidence pill
+  (high / medium / low) and a "current" flag.
+- **Career filters** (graph view): "Came from" (any prior org) and "Went to" (any org that follows a lab
+  stint), with counts. They highlight matching people the same way the mechanism select does and combine with
+  it and with each other.
+
 ## Integration
 
 **github.io (al-folio / Jekyll)**: copy this folder to `assets/frontier-graph/`. al-folio runs
@@ -67,8 +93,8 @@ settings, so rename the scripts in the copy and patch the references:
 
 ```sh
 cd assets/frontier-graph
-mv app.js app.min.js; mv data/graph.js data/graph.min.js; mv data/graph.sample.js data/graph.sample.min.js
-sed -i '' -e 's#data/graph\.js#data/graph.min.js#g' -e 's#data/graph\.sample\.js#data/graph.sample.min.js#g' -e 's#"app\.js"#"app.min.js"#g' index.html app.min.js
+mv app.js app.min.js; mv flows.js flows.min.js; mv data/graph.js data/graph.min.js; mv data/graph.sample.js data/graph.sample.min.js
+sed -i '' -e 's#data/graph\.js#data/graph.min.js#g' -e 's#data/graph\.sample\.js#data/graph.sample.min.js#g' -e 's#"app\.js"#"app.min.js"#g' -e 's#"flows\.js"#"flows.min.js"#g' index.html app.min.js
 ```
 
 Also add `assets/frontier-graph/*` and `assets/frontier-graph/data/*` to `jekyll-minifier.exclude`
