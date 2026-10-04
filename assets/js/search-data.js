@@ -58,6 +58,13 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/people/";
           },
+        },{id: "nav-frontier-graph",
+          title: "frontier graph",
+          description: "One point per researcher at OpenAI, Anthropic and Meta Superintelligence Labs, connected by co-authored work. Click a person to see their collaborators and the shared papers; click a lab to highlight it.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/frontier-graph/";
+          },
         },{id: "dropdown-bookshelf",
               title: "bookshelf",
               description: "",
