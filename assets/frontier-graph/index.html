@@ -1,105 +1,86 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Frontier Graph</title>
-    <meta name="description" content="People graph of frontier-lab researchers, connected by co-authored work." />
-    <script>
-      if (/[?&]embed=1/.test(location.search)) document.documentElement.classList.add("embed");
-    </script>
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-    <!-- Defines window.FRONTIER_GRAPH (works on file://). Missing file: app.js falls back to graph.json, then the sample. -->
-    <script src="data/graph.min.js"></script>
-    <script src="app.min.js" defer></script>
-    <script src="flows.min.js" defer></script>
-  </head>
-  <body>
-    <header id="topbar">
-      <div class="brand" id="brand">Frontier Graph</div>
-      <button id="toggle-filters" class="btn" aria-expanded="true" aria-controls="filters">Filters</button>
-      <div id="chips" class="chips" role="group" aria-label="Labs"></div>
-      <div class="search">
-        <input
-          id="search"
-          type="search"
-          placeholder="Search people  ( / )"
-          autocomplete="off"
-          spellcheck="false"
-          role="combobox"
-          aria-expanded="false"
-          aria-controls="suggest"
-          aria-label="Search people"
-        />
-        <ul id="suggest" role="listbox" hidden></ul>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frontier Graph</title>
+<meta name="description" content="People graph of frontier-lab researchers, connected by co-authored work.">
+<script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed")</script>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<!-- Defines window.FRONTIER_GRAPH (works on file://). Missing file: app.js falls back to graph.json, then the sample. -->
+<script src="data/graph.min.js"></script>
+<script src="app.min.js" defer></script>
+<script src="flows.min.js" defer></script>
+</head>
+<body>
+<header id="topbar">
+  <div class="brand" id="brand">Frontier Graph</div>
+  <button id="toggle-filters" class="btn" aria-expanded="true" aria-controls="filters">Filters</button>
+  <div id="chips" class="chips" role="group" aria-label="Labs"></div>
+  <div class="search">
+    <input id="search" type="search" placeholder="Search people  ( / )" autocomplete="off" spellcheck="false"
+           role="combobox" aria-expanded="false" aria-controls="suggest" aria-label="Search people">
+    <ul id="suggest" role="listbox" hidden></ul>
+  </div>
+  <div class="presets">
+    <button class="btn" id="p-bridges" aria-pressed="false" title="Only cross-lab collaboration edges">Cross-lab bridges</button>
+    <button class="btn" id="p-flows" aria-pressed="false" title="Chord diagram of moves between orgs (needs employment history in the data)">Flows</button>
+    <button class="btn" id="p-connectors" title="Rank people by distinct labs among collaborators">Top connectors</button>
+    <button class="btn" id="p-reset" title="Reset filters, selection and zoom">Reset</button>
+  </div>
+</header>
+<main id="main">
+  <aside id="filters" aria-label="Filters">
+    <section class="g-only">
+      <h3>Edge kinds</h3>
+      <label class="chk"><input type="checkbox" data-kind="coauthor" checked> Co-author</label>
+      <label class="chk"><input type="checkbox" data-kind="shared_artifact" checked> Shared artifact</label>
+      <label class="chk"><input type="checkbox" data-kind="shared_repo" checked> Shared repo</label>
+      <label class="chk"><input type="checkbox" data-kind="topical" checked> Topical similarity</label>
+    </section>
+    <section>
+      <h3>Years <output id="years-out">1995&ndash;2026</output></h3>
+      <div class="dual">
+        <input type="range" id="y-min" min="1995" max="2026" value="1995" aria-label="From year">
+        <input type="range" id="y-max" min="1995" max="2026" value="2026" aria-label="To year">
       </div>
-      <div class="presets">
-        <button class="btn" id="p-bridges" aria-pressed="false" title="Only cross-lab collaboration edges">Cross-lab bridges</button>
-        <button class="btn" id="p-flows" aria-pressed="false" title="Chord diagram of moves between orgs (needs employment history in the data)">
-          Flows
-        </button>
-        <button class="btn" id="p-connectors" title="Rank people by distinct labs among collaborators">Top connectors</button>
-        <button class="btn" id="p-reset" title="Reset filters, selection and zoom">Reset</button>
-      </div>
-    </header>
-    <main id="main">
-      <aside id="filters" aria-label="Filters">
-        <section class="g-only">
-          <h3>Edge kinds</h3>
-          <label class="chk"><input type="checkbox" data-kind="coauthor" checked /> Co-author</label>
-          <label class="chk"><input type="checkbox" data-kind="shared_artifact" checked /> Shared artifact</label>
-          <label class="chk"><input type="checkbox" data-kind="shared_repo" checked /> Shared repo</label>
-          <label class="chk"><input type="checkbox" data-kind="topical" checked /> Topical similarity</label>
-        </section>
-        <section>
-          <h3>Years <output id="years-out">1995&ndash;2026</output></h3>
-          <div class="dual">
-            <input type="range" id="y-min" min="1995" max="2026" value="1995" aria-label="From year" />
-            <input type="range" id="y-max" min="1995" max="2026" value="2026" aria-label="To year" />
-          </div>
-          <p class="hint g-only">Edges stay if any shared work is in range. Topical edges ignore this.</p>
-          <label class="chk f-only"><input type="checkbox" id="undated" checked /> Include undated moves</label>
-          <p class="hint f-only">Moves are filtered by the year of the new role.</p>
-        </section>
-        <section class="g-only">
-          <h3>Min shared works <output id="minw-out">1</output></h3>
-          <input type="range" id="minw" min="1" max="10" value="1" aria-label="Minimum shared works" />
-        </section>
-        <section class="g-only">
-          <label class="chk"><input type="checkbox" id="iso" /> Hide people with no visible edges</label>
-          <label class="chk"><input type="checkbox" id="cluster" checked /> Cluster by lab</label>
-        </section>
-        <section class="g-only">
-          <h3>Mechanism</h3>
-          <select id="mech" aria-label="Highlight people by mechanism">
-            <option value="">Any</option>
-          </select>
-        </section>
-        <section class="g-only" id="career-sec" hidden>
-          <h3>Career</h3>
-          <label class="chk"><input type="checkbox" id="rings" checked /> Career rings</label>
-          <label class="lbl" for="from-org">Came from</label>
-          <select id="from-org" aria-label="Highlight people who came from an org">
-            <option value="">Any</option>
-          </select>
-          <label class="lbl" for="to-org">Went to</label>
-          <select id="to-org" aria-label="Highlight people who went to an org after a lab">
-            <option value="">Any</option>
-          </select>
-        </section>
-      </aside>
-      <div id="stage">
-        <svg id="svg" role="img" aria-label="Researcher collaboration graph"></svg>
-        <svg id="flows-svg" role="img" aria-label="Moves between organisations (chord diagram)"></svg>
-        <div id="tooltip" role="tooltip" hidden></div>
-        <div id="msg" class="msg">Loading graph&hellip;</div>
-        <aside id="drawer" aria-label="Details" aria-live="polite"></aside>
-      </div>
-    </main>
-    <footer id="stats">
-      <span id="st-people"></span><span id="st-edges"></span><span id="st-cross"></span><span id="st-built"></span>
-      <span id="data-note" class="note" hidden>sample data</span>
-    </footer>
-  </body>
+      <p class="hint g-only">Edges stay if any shared work is in range. Topical edges ignore this.</p>
+      <label class="chk f-only"><input type="checkbox" id="undated" checked> Include undated moves</label>
+      <p class="hint f-only">Moves are filtered by the year of the new role.</p>
+    </section>
+    <section class="g-only">
+      <h3>Min shared works <output id="minw-out">1</output></h3>
+      <input type="range" id="minw" min="1" max="10" value="1" aria-label="Minimum shared works">
+    </section>
+    <section class="g-only">
+      <label class="chk"><input type="checkbox" id="iso"> Hide people with no visible edges</label>
+      <label class="chk"><input type="checkbox" id="cluster" checked> Cluster by lab</label>
+    </section>
+    <section class="g-only">
+      <h3>Mechanism</h3>
+      <select id="mech" aria-label="Highlight people by mechanism"><option value="">Any</option></select>
+    </section>
+    <section class="g-only" id="career-sec" hidden>
+      <h3>Career</h3>
+      <label class="chk"><input type="checkbox" id="rings" checked> Career rings</label>
+      <label class="lbl" for="from-org">Came from</label>
+      <select id="from-org" aria-label="Highlight people who came from an org"><option value="">Any</option></select>
+      <label class="lbl" for="to-org">Went to</label>
+      <select id="to-org" aria-label="Highlight people who went to an org after a lab"><option value="">Any</option></select>
+    </section>
+  </aside>
+  <div id="stage">
+    <svg id="svg" role="img" aria-label="Researcher collaboration graph"></svg>
+    <svg id="flows-svg" role="img" aria-label="Moves between organisations (chord diagram)"></svg>
+    <div id="tooltip" role="tooltip" hidden></div>
+    <div id="msg" class="msg">Loading graph&hellip;</div>
+    <aside id="drawer" aria-label="Details" aria-live="polite"></aside>
+  </div>
+</main>
+<footer id="stats">
+  <span id="st-people"></span><span id="st-edges"></span><span id="st-cross"></span><span id="st-built"></span>
+  <span id="data-note" class="note" hidden>sample data</span>
+</footer>
+</body>
 </html>
